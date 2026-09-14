@@ -1,0 +1,13 @@
+node_modules
+dist
+.DS_Store
+*.local
+
+# 运行时数据库（含账号与密码哈希，禁止提交）
+server/data/
+
+# 环境变量 / 密钥 / 日志
+.env
+.env.*
+!.env.example
+*.log

@@ -1,0 +1,64 @@
+/* ============================================================
+   文化桥评估系统 · 设计令牌
+   主题：中华文化（墨色 / 丹红 / 鎏金 / 宣纸）
+   分类色板已经 validate_palette.js 校验通过（色盲分离 ΔE≥9）
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  /* —— 品牌 —— */
+  --brand-ink:        #1f2330;   /* 墨色：侧栏 / 主文字 */
+  --brand-red:        #c03a2b;   /* 朱砂红：主强调 */
+  --brand-red-dark:   #a02f22;
+  --brand-red-soft:   #f6e5e2;   /* 朱砂红浅底 */
+  --brand-gold:       #c9a227;   /* 鎏金：次强调 */
+  --brand-gold-soft:  #f5edcf;
+  --brand-jade:       #1ba983;   /* 竹青：正向 */
+  --paper:            #f4f0e6;   /* 宣纸米白：页面背景 */
+  --paper-deep:       #ece7d8;
+
+  /* —— 分类色板（8 槽，固定顺序，禁止循环）—— */
+  --c1: #3a6ba5;                 /* 黛蓝 */
+  --c2: #e0692f;                 /* 赭橙 */
+  --c3: #1ba983;                 /* 竹青 */
+  --c4: #d19a1f;                 /* 鎏金 */
+  --c5: #c2547e;                 /* 胭脂 */
+  --c6: #3e7d3c;                 /* 松绿 */
+  --c7: #6c5b9e;                 /* 黛紫 */
+  --c8: #c03a2b;                 /* 朱砂红 */
+
+  /* —— 状态色（固定，不用作系列色，永远配图标 + 标签）—— */
+  --status-good:     #0ca30c;
+  --status-warning:  #fab219;
+  --status-serious:  #ec835a;
+  --status-critical: #d03b3b;
+
+  /* —— 图表墨色与表面 —— */
+  --surface:    #fcfcfb;
+  --ink:        #1f1f1f;
+  --ink-2:      #52514e;
+  --muted:      #898781;
+  --gridline:   #e1e0d9;
+  --baseline:   #c3c2b7;
+  --hairline:   rgba(17, 17, 15, 0.10);
+
+  /* —— 字体 —— */
+  --font-sans: "PingFang SC", "Microsoft YaHei", "Source Han Sans SC",
+               "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+
+  /* —— 间距 —— */
+  --s1: 4px;  --s2: 8px;  --s3: 12px; --s4: 16px;
+  --s5: 24px; --s6: 32px; --s7: 48px;
+
+  /* —— 圆角 & 阴影 —— */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-sm: 0 1px 2px rgba(31, 27, 20, 0.06);
+  --shadow-md: 0 6px 20px rgba(31, 27, 20, 0.08);
+
+  /* —— 布局 —— */
+  --sidebar-w: 232px;
+  --topbar-h: 60px;
+}
