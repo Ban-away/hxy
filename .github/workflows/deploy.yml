@@ -1,0 +1,57 @@
+name: Deploy
+
+# 部署到一台 Linux 服务器（VPS）：构建前端 → rsync 同步代码 → PM2 重启。
+#
+# 当前为「手动触发」（仓库 Actions → Deploy → Run workflow）。
+# 配置好服务器后，改成 push 自动部署：在下面 on 中加上
+#     push:
+#       branches: [main]
+#
+# 需在仓库 Settings → Secrets and variables → Actions 配置 4 个密钥：
+#   DEPLOY_HOST   目标服务器 IP/域名
+#   DEPLOY_USER   登录用户名（如 root / ubuntu）
+#   DEPLOY_DIR    部署目录（如 /opt/hxy）
+#   DEPLOY_KEY    私钥内容（服务器上允许登录的 SSH 私钥，注意服务器需预装 Node 22+ 与 pm2）
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Deploy via SSH (rsync + PM2)
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_DIR: ${{ secrets.DEPLOY_DIR }}
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$DEPLOY_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          rsync -avz --delete \
+            --exclude='node_modules' \
+            --exclude='server/data' \
+            --exclude='.env' \
+            --exclude='ecosystem.config.cjs' \
+            --exclude='.git' \
+            -e "ssh -i ~/.ssh/id_ed25519" \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_DIR/"
+          ssh -i ~/.ssh/id_ed25519 "$DEPLOY_USER@$DEPLOY_HOST" "cd $DEPLOY_DIR && npm ci --omit=dev && (pm2 restart hxy 2>/dev/null || pm2 start server/index.js --name hxy) && pm2 save"
